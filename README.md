@@ -1,8 +1,8 @@
-# Zomboid Server on Ubuntu 23.04
+# :zombie: Zomboid Server on Ubuntu 23.04
 
 This repository contains scripts, configuration files, and documentation to help you set up a Project Zomboid server on an Ubuntu 23.04 64-bit VPS hosted with Hostinger. This is a personal project designed to create a private server for playing with friends. 
 
-## Table of Contents
+## :bookmark_tabs: Table of Contents
 1. [Prerequisites](#prerequisites)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
@@ -191,7 +191,7 @@ These steps should help you install and configure your Project Zomboid server. M
 
 This project is open-source and available under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
-## Contact
+## :mailbox_with_mail: Contact
 
 If you have any questions, suggestions, or issues, please open an issue in the repository.
 
