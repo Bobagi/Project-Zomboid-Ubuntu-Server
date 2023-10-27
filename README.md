@@ -21,41 +21,115 @@ Before you begin, ensure you have met the following requirements:
 - Basic knowledge of terminal and Linux commands
 - Project Zomboid game purchased on a platform like Steam
 
+Sure, I can help you format the installation instructions more clearly:
+
 ## Installation
 
-1. Update your system's package list:
+1. Update and upgrade your system:
+
+   ```
+   sudo apt-get update && sudo apt-get upgrade -y
+   ```
+
+2. Add a new user named "steam":
+
+   ```
+   sudo adduser steam
+   ```
+
+3. Change to the "steam" user's home directory:
+
+   ```
+   cd /home/steam
+   ```
+
+4. Enable the multiverse repository:
+
+   ```
+   sudo add-apt-repository multiverse
+   ```
+
+5. Enable the i386 architecture:
+
+   ```
+   sudo dpkg --add-architecture i386
+   ```
+
+6. Update your package list:
+
+   ```
+   sudo apt update
+   ```
+
+7. Install SteamCMD:
+
+   ```
+   sudo apt install steamcmd
+   ```
+
+8. Switch to the "steam" user:
+
+   ```
+   su - steam
+   ```
+
+9. Change to the home directory of the "steam" user:
+
+   ```
+   cd
+   ```
+
+10. Create a directory for your Project Zomboid server installation:
 
     ```
-    sudo apt update
+    force_install_dir /home/steam/pzsteam
     ```
 
-2. Install the required dependencies:
+11. Log in to SteamCMD anonymously:
 
     ```
-    sudo apt install openjdk-11-jre-headless screen
+    login anonymous
     ```
 
-3. Create a user for running the server (for security purposes):
+12. Update and validate the Project Zomboid server files:
 
     ```
-    sudo adduser pzserver
+    app_update 380870 validate
     ```
 
-4. Switch to the new user:
+13. Exit SteamCMD:
 
     ```
-    su - pzserver
+    exit
     ```
 
-5. Download and extract the Project Zomboid Dedicated Server files:
+14. Once you have configured the settings as you like, navigate to the following folder on your Windows machine:
 
     ```
-    wget LINK_TO_ZOMBOID_SERVER_FILES
-    tar -xzvf FILE_NAME.tar.gz
+    C:\Users\yourusername\Zomboid\Server
     ```
 
-    (Replace `LINK_TO_ZOMBOID_SERVER_FILES` and `FILE_NAME.tar.gz` with the appropriate download link and file name.)
+15. In that folder, copy the following files:
 
+    - yourservername.ini
+    - yourservername_spawnregions.lua
+    - yourservername_SandboxVars.lua
+
+16. In the PZ server directory on your Linux server:
+
+    ```
+    /home/steam/.steam/steamapps/common/Project Zomboid Dedicated Server
+    ```
+
+   You will find a file called `ProjectZomboid64.json`.
+
+17. Start your Project Zomboid server with the desired server name (replace "pzOlimpoServer" with your desired server name):
+
+    ```
+    bash start-server.sh -servername pzOlimpoServer
+    ```
+
+These steps should help you install and configure your Project Zomboid server. Make sure to replace "yourservername" and "yourusername" with the appropriate values for your setup.
 ## Configuration
 
 1. Navigate to the server files directory:
