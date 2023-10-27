@@ -112,7 +112,7 @@ Sure, I can help you format the installation instructions more clearly:
     exit
     ```
 
-14. Once you have configured the settings as you like, navigate to the following folder on your Windows machine:
+14. Once you have configured the settings as you like, navigate to the following folder on your Windows machine if you already have a server:
 
     ```
     C:\Users\yourusername\Zomboid\Server
@@ -124,18 +124,18 @@ Sure, I can help you format the installation instructions more clearly:
     - yourservername_spawnregions.lua
     - yourservername_SandboxVars.lua
 
-16. In the PZ server directory on your Linux server:
+16. In the PZ server directory on your Linux server paste these files:
 
     ```
-    /home/steam/.steam/steamapps/common/Project Zomboid Dedicated Server
+    /home/steam/Zomboid/Server
     ```
-
-   You will find a file called `ProjectZomboid64.json`.
+   
+   And change the file called `ProjectZomboid64.json` in the Xmx parameters, to specify the correct RAM dedicated to server.
 
 17. Start your Project Zomboid server with the desired server name (replace "pzOlimpoServer" with your desired server name):
 
     ```
-    bash start-server.sh -servername pzOlimpoServer
+    ./start-server.sh -servername yourservername
     ```
 
 These steps should help you install and configure your Project Zomboid server. Make sure to replace "yourservername" and "yourusername" with the appropriate values for your setup.
@@ -144,7 +144,7 @@ These steps should help you install and configure your Project Zomboid server. M
 1. Navigate to the server files directory:
 
     ```
-    cd path/to/server/files
+    cd home/steam/pzserver
     ```
 
 2. Edit the server settings as per your requirements. You can use `nano` or any other text editor:
@@ -160,13 +160,13 @@ These steps should help you install and configure your Project Zomboid server. M
 1. Start a `screen` session:
 
     ```
-    screen -S zomboid-server
+    screen -S zomboid
     ```
 
 2. Navigate to the server files directory and run the server:
 
     ```
-    cd path/to/server/files
+    cd home/steam/pzserver
     ./start-server.sh
     ```
 
@@ -178,10 +178,12 @@ These steps should help you install and configure your Project Zomboid server. M
 2. Use `scp` or any other file transfer method to upload the mods to your VPS:
 
     ```
-    scp /path/to/mods pzserver@your_vps_ip:/home/pzserver/Zomboid/mods/
+    scp /path/mods pzserver@your_vps_ip:/home/pzserver/Zomboid/mods/
     ```
 
     (Replace `/path/to/mods`, `pzserver`, `your_vps_ip` with the appropriate paths, username, and IP address.)
+   
+   Or use another method to paste the mods folder in the server, as Filezilla.
 
 3. Once uploaded, add the mods to your `ServerSettings.ini` file under the `Mods` section.
 
@@ -197,6 +199,4 @@ If you have any questions, suggestions, or issues, please open an issue in the r
 
 - Thanks to the Project Zomboid team for creating an awesome game.
 - Thanks to Hostinger for providing the VPS hosting services.
-- Thanks to all contributors and players.
-
-Please note that you need to replace placeholder text such as file paths, IP addresses, and download links with actual values according to your setup.
+- Thanks to all players.
