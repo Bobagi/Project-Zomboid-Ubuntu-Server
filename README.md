@@ -30,6 +30,12 @@ Sure, I can help you format the installation instructions more clearly:
    ```
    sudo apt-get update && sudo apt-get upgrade -y
    ```
+   ```
+   sudo ufw allow 16261
+   ```
+    ```
+   sudo ufw allow 16262
+   ```
 
 2. Add a new user named "steam":
 
@@ -77,6 +83,7 @@ Sure, I can help you format the installation instructions more clearly:
 
    ```
    cd
+   steamcmd
    ```
 
 10. Create a directory for your Project Zomboid server installation:
