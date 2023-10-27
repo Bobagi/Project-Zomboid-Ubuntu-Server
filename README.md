@@ -42,7 +42,9 @@ Sure, I can help you format the installation instructions more clearly:
    ```
    sudo adduser steam
    ```
-
+   ```
+   usermod -aG sudo steam
+   ```
 3. Change to the "steam" user's home directory:
 
    ```
