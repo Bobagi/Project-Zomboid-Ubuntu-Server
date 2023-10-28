@@ -1,6 +1,8 @@
-# :zombie: Zomboid Server on Ubuntu 23.04
+# :zombie: Zomboid Server on Ubuntu 22.04 and 23.04
 
-This repository contains scripts, configuration files, and documentation to help you set up a Project Zomboid server on an Ubuntu 23.04 64-bit VPS hosted with Hostinger. This is a personal project designed to create a private server for playing with friends. 
+This repository contains scripts, configuration files, and documentation to help you set up a Project Zomboid server on an Ubuntu 23.04 64-bit VPS hosted with Hostinger and on a server on an Ubuntu 22.04 64-bit VPS hosted with Hostzone. This is a personal project designed to create a private server for playing with friends.
+
+The Hostzone VPS was essentially double the price, but the ping was much better.
 
 ## :bookmark_tabs: Table of Contents
 1. [Prerequisites](#prerequisites)
