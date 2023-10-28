@@ -33,6 +33,9 @@ Sure, I can help you format the installation instructions more clearly:
    sudo apt-get update && sudo apt-get upgrade -y
    ```
    ```
+   sudo ufw enable
+   ```
+   ```
    sudo ufw allow 16261
    ```
    ```
