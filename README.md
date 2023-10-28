@@ -167,7 +167,7 @@ These steps should help you install and configure your Project Zomboid server. M
 
     ```
     cd home/steam/pzserver
-    ./start-server.sh
+    ./start-server.sh -servername yourservername
     ```
 
 3. To detach from the screen session (and keep the server running in the background), press `Ctrl + A`, then `D`.
