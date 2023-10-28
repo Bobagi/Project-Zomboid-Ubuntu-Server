@@ -11,8 +11,7 @@ The Hostzone VPS was essentially double the price, but the ping was much better.
 4. [Running the Server](#running-the-server)
 5. [Installing Mods](#installing-mods)
 6. [License](#license)
-7. [Contact](#contact)
-8. [Acknowledgements](#acknowledgements)
+7. [Acknowledgements](#acknowledgements)
 
 ## Prerequisites
 
@@ -120,32 +119,42 @@ Sure, I can help you format the installation instructions more clearly:
     ```
 
 13. Exit SteamCMD:
+   
+   ```
+   exit
+   ```
 
-    ```
-    exit
-    ```
+14. Change the Xmx parameter, to specify the correct amount of gb RAM you would like to be dedicated to Zomboid:
 
-14. Once you have configured the settings as you like, navigate to the following folder on your Windows machine if you already have a server:
+      ```
+      cd /home/steam/pzsteam
+      ```
+      And change the file called `ProjectZomboid64.json` in the Xmx parameters, to specify the correct RAM dedicated to server.
+      ```
+      sudo nano ProjectZomboid64.json
+      ```
+      ![image](https://github.com/Bobagi/Zomboid-Ubuntu-Server/assets/45888141/e945f3f0-156c-448f-b62f-6e0332ba98f2)
+      In that case, i'm using 8g of RAM.
+    
+15. Once you have configured the settings as you like, navigate to the following folder on your Windows machine if you already have a server:
 
     ```
     C:\Users\yourusername\Zomboid\Server
     ```
 
-15. In that folder, copy the following files:
+16. In that folder, copy the following files:
 
     - yourservername.ini
     - yourservername_spawnregions.lua
     - yourservername_SandboxVars.lua
 
-16. In the PZ server directory on your Linux server paste these files:
+17. In the PZ server directory on your Linux server paste these files:
 
     ```
     /home/steam/Zomboid/Server
     ```
    
-   And change the file called `ProjectZomboid64.json` in the Xmx parameters, to specify the correct RAM dedicated to server.
-
-17. Start your Project Zomboid server with the desired server name (replace "pzOlimpoServer" with your desired server name):
+18. Start your Project Zomboid server with the desired server name (replace "pzOlimpoServer" with your desired server name):
 
     ```
     ./start-server.sh -servername yourservername
