@@ -33,10 +33,12 @@ Sure, I can help you format the installation instructions more clearly:
    ```
    sudo ufw allow 16261
    ```
-    ```
+   ```
    sudo ufw allow 16262
    ```
-
+   ```
+   sudo ufw reload
+   ```
 2. Add a new user named "steam":
 
    ```
