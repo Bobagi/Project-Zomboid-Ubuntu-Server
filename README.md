@@ -35,6 +35,12 @@ Sure, I can help you format the installation instructions more clearly:
    ```
    sudo ufw enable
    ```
+   IMPORTANT:
+   If you're connecting via SSH, you need to allow the port you are using; otherwise, you won't be able to connect via SSH as you are currently doing:
+   ```
+   sudo ufw allow 22
+   ```
+   In my case, my port to SSH is 22
    ```
    sudo ufw allow 16261
    ```
