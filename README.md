@@ -4,6 +4,8 @@ This repository contains scripts, configuration files, and documentation to help
 
 The Hostzone VPS was essentially double the price, but the ping was much better.
 
+Any suggestion on how to check other host services pings
+
 ## :bookmark_tabs: Table of Contents
 1. [Prerequisites](#prerequisites)
 2. [Installation](#installation)
@@ -28,77 +30,101 @@ Sure, I can help you format the installation instructions more clearly:
 
 1. Update and upgrade your system:
 
-   ```
-   sudo apt-get update && sudo apt-get upgrade -y
-   ```
-   ```
-   sudo ufw enable
-   ```
-   IMPORTANT:
-   If you're connecting via SSH, you need to allow the port you are using; otherwise, you won't be able to connect via SSH as you are currently doing:
-   ```
-   sudo ufw allow 22
-   ```
-   In my case, my port to SSH is 22
-   ```
-   sudo ufw allow 16261
-   ```
-   ```
-   sudo ufw allow 16262
-   ```
-   ```
-   sudo ufw reload
-   ```
-2. Add a new user named "steam":
+    ```
+    sudo apt-get update && sudo apt-get upgrade -y
+    ```
+    ```
+    sudo ufw enable
+    ```
 
-   ```
-   sudo adduser steam
-   ```
-   ```
-   usermod -aG sudo steam
-   ```
+    IMPORTANT:
+    If you're connecting via SSH, you need to allow the port you are using; otherwise, you won't be able to connect via SSH as you are currently doing:
+
+    ```
+    sudo ufw allow 22
+    ```
+
+    In my case, my port to SSH is 22
+
+    Then allow the ports used by the game Server:
+    ```
+    sudo ufw allow 16261
+    ```
+    ```
+    sudo ufw allow 16262
+    ```
+    ```
+    sudo ufw reload
+    ```
+
+    Then i recommend to check if the ports are really open:
+
+    ```
+    sudo ufw status
+    ```
+
+    Look if all the ports you have opened are listed.
+
+2. Add a new user named "steam" (or whatever name you want):
+
+    ```
+    sudo adduser steam
+    ```
+    ```
+    usermod -aG sudo steam
+    ```
+    
+    Give user permissions:
+
+    ```
+    sudo chown steam:steam /home/steam/ -R
+    ```
+    ```
+    sudo chmod -R 755 /home/steam/
+    ```
+
 3. Change to the "steam" user's home directory:
 
-   ```
-   cd /home/steam
-   ```
+    ```
+    cd /home/steam
+    ```
 
 4. Enable the multiverse repository:
 
-   ```
-   sudo add-apt-repository multiverse
-   ```
+    ```
+    sudo add-apt-repository multiverse
+    ```
 
 5. Enable the i386 architecture:
 
-   ```
-   sudo dpkg --add-architecture i386
-   ```
+    ```
+    sudo dpkg --add-architecture i386
+    ```
 
 6. Update your package list:
 
-   ```
-   sudo apt update
-   ```
+    ```
+    sudo apt update
+    ```
 
 7. Install SteamCMD:
 
-   ```
-   sudo apt install steamcmd
-   ```
+    ```
+    sudo apt install steamcmd
+    ```
 
 8. Switch to the "steam" user:
 
-   ```
-   su - steam
-   ```
+    ```
+    su - steam
+    ```
 
 9. Change to the home directory of the "steam" user:
 
-   ```
-   cd
-   steamcmd
-   ```
+    ```
+    cd
+    steamcmd
+    ```
 
 10. Create a directory for your Project Zomboid server installation:
 
@@ -120,62 +146,46 @@ Sure, I can help you format the installation instructions more clearly:
 
 13. Exit SteamCMD:
    
-   ```
-   exit
-   ```
+    ```
+    exit
+    ```
 
-14. Change the Xmx parameter, to specify the correct amount of gb RAM you would like to be dedicated to Zomboid:
+## Configuration
 
-      ```
-      cd /home/steam/pzsteam
-      ```
-      And change the file called `ProjectZomboid64.json` in the Xmx parameters, to specify the correct RAM dedicated to server.
-      ```
-      sudo nano ProjectZomboid64.json
-      ```
-      ![image](https://github.com/Bobagi/Zomboid-Ubuntu-Server/assets/45888141/e945f3f0-156c-448f-b62f-6e0332ba98f2)
-      In that case, i'm using 8g of RAM.
+1. Change the Xmx parameter, to specify the correct amount of gb RAM you would like to be dedicated to Zomboid:
+
+    ```
+    cd /home/steam/pzsteam
+    ```
+
+    Then change the file called `ProjectZomboid64.json` in the Xmx parameters, to specify the correct RAM dedicated to server.
+
+    ```
+    sudo nano ProjectZomboid64.json
+    ```
+
+    ![image](https://github.com/Bobagi/Zomboid-Ubuntu-Server/assets/45888141/e945f3f0-156c-448f-b62f-6e0332ba98f2)
+    In that case, i'm using 8g of RAM.
     
-15. Once you have configured the settings as you like, navigate to the following folder on your Windows machine if you already have a server:
+2. Once you have configured the settings as you like, you need to create a server, in your local machine to make the configurations you want, and then navigate to the following folder on your Windows machine if you already have a server:
 
     ```
     C:\Users\yourusername\Zomboid\Server
     ```
 
-16. In that folder, copy the following files:
+3. In that folder, copy the following files:
 
     - yourservername.ini
     - yourservername_spawnregions.lua
     - yourservername_SandboxVars.lua
 
-17. In the PZ server directory on your Linux server paste these files:
+4. In the PZ server directory on your Linux server paste these files:
 
     ```
     /home/steam/Zomboid/Server
     ```
-   
-18. Start your Project Zomboid server with the desired server name (replace "pzOlimpoServer" with your desired server name):
-
-    ```
-    ./start-server.sh -servername yourservername
-    ```
 
 These steps should help you install and configure your Project Zomboid server. Make sure to replace "yourservername" and "yourusername" with the appropriate values for your setup.
-## Configuration
-
-1. Navigate to the server files directory:
-
-    ```
-    cd home/steam/pzserver
-    ```
-
-2. Edit the server settings as per your requirements. You can use `nano` or any other text editor:
-
-    ```
-    nano ServerSettings.ini
-    ```
-
-3. Save the changes and exit the text editor.
 
 ## Running the Server
 
@@ -188,7 +198,10 @@ These steps should help you install and configure your Project Zomboid server. M
 2. Navigate to the server files directory and run the server:
 
     ```
-    cd home/steam/pzserver
+    cd /home/steam/pzsteam
+    ```
+
+    ```    
     ./start-server.sh -servername yourservername
     ```
 
@@ -197,6 +210,7 @@ These steps should help you install and configure your Project Zomboid server. M
 ## Installing Mods
 
 1. Download the mods you wish to install to your local computer.
+
 2. Use `scp` or any other file transfer method to upload the mods to your VPS:
 
     ```
