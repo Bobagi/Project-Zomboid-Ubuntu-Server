@@ -19,12 +19,11 @@ Any suggestion on how to check other host services pings
 
 Before you begin, ensure you have met the following requirements:
 
-- A VPS running Ubuntu 23.04 64-bit
+- A VPS running Ubuntu (tested in 22.04 and 23.04 64-bit)
 - sudo privileges on the VPS
 - Basic knowledge of terminal and Linux commands
 - Project Zomboid game purchased on a platform like Steam
 
-Sure, I can help you format the installation instructions more clearly:
 
 ## :cd: Installation
 
