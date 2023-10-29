@@ -209,7 +209,7 @@ These steps should help you install and configure your Project Zomboid server. M
 
 ## :godmode: Installing Mods
 
-1. Download the mods you wish to install to your local computer.
+1. Download the mods you wish to install to your local computer. (https://steamcommunity.com/app/108600/discussions/0/3428846977656275044/)
 
 2. Use `scp` or any other file transfer method to upload the mods to your VPS:
 
