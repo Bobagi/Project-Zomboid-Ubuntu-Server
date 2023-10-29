@@ -15,7 +15,7 @@ Any suggestion on how to check other host services pings
 6. [License](#license)
 7. [Acknowledgements](#acknowledgements)
 
-## Prerequisites
+## :desktop_computer: Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
@@ -26,7 +26,7 @@ Before you begin, ensure you have met the following requirements:
 
 Sure, I can help you format the installation instructions more clearly:
 
-## Installation
+## :cd: Installation
 
 1. Update and upgrade your system:
 
@@ -150,7 +150,7 @@ Sure, I can help you format the installation instructions more clearly:
     exit
     ```
 
-## Configuration
+## :gear: Configuration
 
 1. Change the Xmx parameter, to specify the correct amount of gb RAM you would like to be dedicated to Zomboid:
 
@@ -187,7 +187,7 @@ Sure, I can help you format the installation instructions more clearly:
 
 These steps should help you install and configure your Project Zomboid server. Make sure to replace "yourservername" and "yourusername" with the appropriate values for your setup.
 
-## Running the Server
+## :joystick: Running the Server
 
 1. Start a `screen` session:
 
@@ -207,9 +207,9 @@ These steps should help you install and configure your Project Zomboid server. M
 
 3. To detach from the screen session (and keep the server running in the background), press `Ctrl + A`, then `D`.
 
-## Installing Mods
+## :godmode: Installing Mods
 
-1. Download the mods you wish to install to your local computer.
+1. Download the mods you wish to install to your local computer. (https://steamcommunity.com/app/108600/discussions/0/3428846977656275044/)
 
 2. Use `scp` or any other file transfer method to upload the mods to your VPS:
 
@@ -223,7 +223,7 @@ These steps should help you install and configure your Project Zomboid server. M
 
 3. Once uploaded, add the mods to your `ServerSettings.ini` file under the `Mods` section.
 
-## License
+## :scroll: License
 
 This project is open-source and available under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
@@ -231,7 +231,7 @@ This project is open-source and available under the MIT License. See the [LICENS
 
 If you have any questions, suggestions, or issues, please open an issue in the repository.
 
-## Acknowledgements
+## :pray: Acknowledgements
 
 - Thanks to the Project Zomboid team for creating an awesome game.
 - Thanks to Hostinger for providing the VPS hosting services.
