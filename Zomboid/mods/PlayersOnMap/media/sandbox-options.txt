@@ -1,0 +1,59 @@
+VERSION = 1,
+
+option PlayersOnMap.Enabled
+{
+	type = boolean,
+	default = true,
+	page = PlayersOnMap,
+	translation = PlayersOnMap_Enabled,
+}
+
+option PlayersOnMap.ShowPlayerNames
+{
+	type = boolean,
+	default = true,
+	page = PlayersOnMap,
+	translation = PlayersOnMap_ShowPlayerNames,
+}
+
+option PlayersOnMap.ShowMyName
+{
+	type = boolean,
+	default = true,
+	page = PlayersOnMap,
+	translation = PlayersOnMap_ShowMyName,
+}
+
+option PlayersOnMap.ShowOnlyFaction
+{
+	type = boolean,
+	default = false,
+	page = PlayersOnMap,
+	translation = PlayersOnMap_ShowOnlyFaction,
+}
+
+option PlayersOnMap.ShowDeadPlayers
+{
+	type = boolean,
+	default = true,
+	page = PlayersOnMap,
+	translation = PlayersOnMap_ShowDeadPlayers,
+}
+
+option PlayersOnMap.FontDebugConsole
+{
+	type = boolean,
+	default = false,
+	page = PlayersOnMap,
+	translation = PlayersOnMap_FontDebugConsole,
+}
+
+option PlayersOnMap.MaxDistance
+{
+	type = integer,
+	default = -1,
+	min = -1,
+	max = 999999999,
+	page = PlayersOnMap,
+	translation = PlayersOnMap_MaxDistance,
+}

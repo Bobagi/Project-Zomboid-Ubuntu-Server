@@ -1,0 +1,24 @@
+Sandbox_EN = {
+    Sandbox_PlayersOnMap = "Players On Map",
+
+    Sandbox_PlayersOnMap_Enabled = "Enabled",
+    Sandbox_PlayersOnMap_Enabled_tooltip = "Will show players on a map.",
+
+    Sandbox_PlayersOnMap_ShowPlayerNames = "Show Player Names",
+    Sandbox_PlayersOnMap_ShowPlayerNames_tooltip = "Will show player names on a map.",
+
+    Sandbox_PlayersOnMap_ShowMyName = "Show My Names",
+    Sandbox_PlayersOnMap_ShowMyName_tooltip = "Will show your player name on a map.",
+
+    Sandbox_PlayersOnMap_ShowOnlyFaction = "Show Only Faction",
+    Sandbox_PlayersOnMap_ShowOnlyFaction_tooltip = "Will show only players that are in the same faction. (Doesn't affect admins)",
+
+    Sandbox_PlayersOnMap_ShowDeadPlayers = "Show Dead Players",
+    Sandbox_PlayersOnMap_ShowDeadPlayers_tooltip = "Will show dead players that are zombie. (Doesn't affect admins)",
+
+    Sandbox_PlayersOnMap_FontDebugConsole = "Use Font DebugConsole (Minimap)",
+    Sandbox_PlayersOnMap_FontDebugConsole_tooltip = "This will make text smaller, but this font doesn't support non ascii usernames.",
+
+    Sandbox_PlayersOnMap_MaxDistance = "Max Distance",
+    Sandbox_PlayersOnMap_MaxDistance_tooltip = "Distance after which player won't show on a map. (Doesn't affect admins)",
+}
