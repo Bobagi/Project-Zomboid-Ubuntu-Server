@@ -206,6 +206,12 @@ These steps should help you install and configure your Project Zomboid server. M
 
 3. To detach from the screen session (and keep the server running in the background), press `Ctrl + A`, then `D`.
 
+4. To attach it again:
+
+    ```
+    screen -r zomboid
+    ```
+
 ## :godmode: Installing Mods
 
 1. Download the mods you wish to install to your local computer. (https://steamcommunity.com/app/108600/discussions/0/3428846977656275044/)
