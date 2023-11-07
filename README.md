@@ -6,6 +6,9 @@ The Hostzone VPS was essentially double the price, but the ping was much better.
 
 Any suggestion on how to check other host services pings
 
+![Steam](https://img.shields.io/badge/steam-%23000000.svg?style=for-the-badge&logo=steam&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+
 ## :bookmark_tabs: Table of Contents
 1. [Prerequisites](#prerequisites)
 2. [Installation](#installation)
