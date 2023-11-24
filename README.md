@@ -235,7 +235,7 @@ These steps should help you install and configure your Project Zomboid server. M
 
 This project is open-source and available under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
-## Buy me a coffee ☕❤️
+## 🥫❤️ Buy me a dog food can
 
 ![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)
 [![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate?hosted_button_id=23PAVC8AMJGYW)
