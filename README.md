@@ -243,9 +243,3 @@ This project is open-source and available under the MIT License. See the [LICENS
 ## :mailbox_with_mail: Contact
 
 If you have any questions, suggestions, or issues, please open an issue in the repository.
-
-## :pray: Acknowledgements
-
-- Thanks to the Project Zomboid team for creating an awesome game.
-- Thanks to Hostinger for providing the VPS hosting services.
-- Thanks to all players.
