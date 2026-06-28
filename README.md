@@ -1,245 +1,414 @@
-# :zombie: Project Zomboid Server on Ubuntu 22.04 and 23.04
+# Project Zomboid Dedicated Server on Ubuntu — Complete Setup Guide
 
-This repository contains scripts, configuration files, and documentation to help you set up a Project Zomboid server on an Ubuntu 23.04 64-bit VPS hosted with Hostinger and on a server on an Ubuntu 22.04 64-bit VPS hosted with Hostzone. This is a personal project designed to create a private server for playing with friends.
+> **Step-by-step guide to install, configure, and run a Project Zomboid dedicated server on Ubuntu 22.04 / 24.04 LTS using SteamCMD.** Covers firewall setup, RAM configuration, mod installation, server recovery, and common troubleshooting. Works on any VPS provider (Hostinger, DigitalOcean, Hetzner, Vultr, AWS, Linode, etc.).
 
-The Hostzone VPS was essentially double the price, but the ping was much better.
-
-Any suggestion on how to check other host services pings
-
+[![Stars](https://img.shields.io/github/stars/Bobagi/Project-Zomboid-Ubuntu-Server?style=for-the-badge)](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/stargazers)
+[![Forks](https://img.shields.io/github/forks/Bobagi/Project-Zomboid-Ubuntu-Server?style=for-the-badge)](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/network/members)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 ![Steam](https://img.shields.io/badge/steam-%23000000.svg?style=for-the-badge&logo=steam&logoColor=white)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
 
-## :bookmark_tabs: Table of Contents
-1. [Prerequisites](#prerequisites)
-2. [Installation](#installation)
-3. [Configuration](#configuration)
-4. [Running the Server](#running-the-server)
-5. [Installing Mods](#installing-mods)
-6. [License](#license)
-7. [Acknowledgements](#acknowledgements)
+---
 
-## :desktop_computer: Prerequisites
+**[🇧🇷 Versão em Português](README.pt-BR.md)**
 
-Before you begin, ensure you have met the following requirements:
+---
 
-- A VPS running Ubuntu (tested in 22.04 and 23.04 64-bit)
-- sudo privileges on the VPS
-- Basic knowledge of terminal and Linux commands
-- Project Zomboid game purchased on a platform like Steam
+## Table of Contents
+1. [Why this guide?](#why-this-guide)
+2. [Prerequisites](#prerequisites)
+3. [Installation](#installation)
+4. [Configuration](#configuration)
+5. [Running the Server](#running-the-server)
+6. [Installing Mods](#installing-mods)
+7. [Server Management](#server-management)
+8. [Troubleshooting](#troubleshooting)
+9. [FAQ](#faq)
+10. [Acknowledgements](#acknowledgements)
+11. [License](#license)
 
+---
 
-## :cd: Installation
+## Why this guide?
 
-1. Update and upgrade your system:
+Most tutorials for hosting a Project Zomboid server on Linux skip important details like RAM allocation, firewall rules, or mod management. This guide was built from real experience hosting private servers and covers:
 
-    ```
-    sudo apt-get update && sudo apt-get upgrade -y
-    ```
-    ```
-    sudo ufw enable
-    ```
+- ✅ Full installation from scratch on a fresh Ubuntu VPS
+- ✅ Firewall (UFW) configuration to avoid connection issues
+- ✅ SteamCMD setup and anonymous login
+- ✅ RAM tuning via `ProjectZomboid64.json`
+- ✅ Importing server settings from a local Windows machine
+- ✅ Running the server in the background with `screen`
+- ✅ Installing workshop mods via SCP or SFTP (FileZilla)
+- ✅ Common errors and how to fix them
 
-    IMPORTANT:
-    If you're connecting via SSH, you need to allow the port you are using; otherwise, you won't be able to connect via SSH as you are currently doing:
+---
 
-    ```
-    sudo ufw allow 22
-    ```
+## Prerequisites
 
-    In my case, my port to SSH is 22
+Before you begin, make sure you have:
 
-    Then allow the ports used by the game Server:
-    ```
-    sudo ufw allow 16261
-    ```
-    ```
-    sudo ufw allow 16262
-    ```
-    ```
-    sudo ufw reload
-    ```
+- A VPS or dedicated machine running **Ubuntu 22.04 or 24.04 LTS (64-bit)** — other Debian-based distros likely work too
+- At least **4 GB RAM** (8 GB recommended for a stable experience with mods)
+- `sudo` privileges on the server
+- Basic knowledge of terminal / Linux commands
+- **Project Zomboid** purchased on Steam (required for mod access — the server itself is free)
+- An SSH client (e.g., PuTTY on Windows, built-in terminal on macOS/Linux)
 
-    Then i recommend to check if the ports are really open:
+---
 
-    ```
-    sudo ufw status
-    ```
+## Installation
 
-    Look if all the ports you have opened are listed.
+### 1. Update the system and configure the firewall
 
-2. Add a new user named "steam" (or whatever name you want):
+```bash
+sudo apt-get update && sudo apt-get upgrade -y
+```
 
-    ```
-    sudo adduser steam
-    ```
-    ```
-    usermod -aG sudo steam
-    ```
-    
-    Give user permissions:
+Enable UFW (firewall):
+```bash
+sudo ufw enable
+```
 
-    ```
-    sudo chown steam:steam /home/steam/ -R
-    ```
-    ```
-    sudo chmod -R 755 /home/steam/
-    ```
+> ⚠️ **Important:** If you are connected via SSH, allow your SSH port **before** enabling the firewall, otherwise you will lose access:
 
-3. Change to the "steam" user's home directory:
+```bash
+sudo ufw allow 22        # SSH (default port — change if you use a custom port)
+```
 
-    ```
-    cd /home/steam
-    ```
+Allow the Project Zomboid server ports:
+```bash
+sudo ufw allow 16261/udp  # Main game port (UDP)
+sudo ufw allow 16262/udp  # Direct connection port (UDP)
+sudo ufw reload
+```
 
-4. Enable the multiverse repository:
+Verify the rules are active:
+```bash
+sudo ufw status
+```
 
-    ```
-    sudo add-apt-repository multiverse
-    ```
+You should see `16261` and `16262` listed as `ALLOW`.
 
-5. Enable the i386 architecture:
+---
 
-    ```
-    sudo dpkg --add-architecture i386
-    ```
+### 2. Create a dedicated user for Steam
 
-6. Update your package list:
+It is best practice to run game servers under a separate non-root user:
 
-    ```
-    sudo apt update
-    ```
+```bash
+sudo adduser steam
+sudo usermod -aG sudo steam
+sudo chown steam:steam /home/steam/ -R
+sudo chmod -R 755 /home/steam/
+```
 
-7. Install SteamCMD:
+---
 
-    ```
-    sudo apt install steamcmd
-    ```
+### 3. Enable 32-bit architecture support and install SteamCMD
 
-8. Switch to the "steam" user:
+Switch to the steam user's directory:
+```bash
+cd /home/steam
+```
 
-    ```
-    su - steam
-    ```
+Enable the multiverse repository and 32-bit support (required by SteamCMD):
+```bash
+sudo add-apt-repository multiverse
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install steamcmd -y
+```
 
-9. Change to the home directory of the "steam" user:
+---
 
-    ```
-    cd
-    steamcmd
-    ```
+### 4. Download the Project Zomboid Dedicated Server
 
-10. Create a directory for your Project Zomboid server installation:
+Switch to the steam user:
+```bash
+su - steam
+cd ~
+steamcmd
+```
 
-    ```
-    force_install_dir /home/steam/pzsteam
-    ```
+Inside SteamCMD, run these commands:
+```
+force_install_dir /home/steam/pzsteam
+login anonymous
+app_update 380870 validate
+exit
+```
 
-11. Log in to SteamCMD anonymously:
+> `380870` is the Steam App ID for the **Project Zomboid Dedicated Server**. It is free and can be downloaded without owning the game.
 
-    ```
-    login anonymous
-    ```
+---
 
-12. Update and validate the Project Zomboid server files:
+## Configuration
 
-    ```
-    app_update 380870 validate
-    ```
+### 1. Set the RAM allocation
 
-13. Exit SteamCMD:
-   
-    ```
-    exit
-    ```
+Navigate to the server directory:
+```bash
+cd /home/steam/pzsteam
+```
 
-## :gear: Configuration
+Edit the JVM configuration file:
+```bash
+nano ProjectZomboid64.json
+```
 
-1. Change the Xmx parameter, to specify the correct amount of gb RAM you would like to be dedicated to Zomboid:
+Find the `-Xmx` parameter and set it to the amount of RAM you want to dedicate:
+- `-Xmx4g` → 4 GB RAM
+- `-Xmx8g` → 8 GB RAM (recommended for most servers)
+- `-Xmx16g` → 16 GB RAM (for large modpacks or many players)
 
-    ```
-    cd /home/steam/pzsteam
-    ```
+![RAM configuration example](https://github.com/Bobagi/Zomboid-Ubuntu-Server/assets/45888141/e945f3f0-156c-448f-b62f-6e0332ba98f2)
 
-    Then change the file called `ProjectZomboid64.json` in the Xmx parameters, to specify the correct RAM dedicated to server.
+---
 
-    ```
-    sudo nano ProjectZomboid64.json
-    ```
+### 2. Import server settings from your local machine (optional but recommended)
 
-    ![image](https://github.com/Bobagi/Zomboid-Ubuntu-Server/assets/45888141/e945f3f0-156c-448f-b62f-6e0332ba98f2)
-    In that case, i'm using 8g of RAM.
-    
-2. Once you have configured the settings as you like, you need to create a server, in your local machine to make the configurations you want, and then navigate to the following folder on your Windows machine if you already have a server:
+The easiest way to configure game settings (map, loot, difficulty, sandbox) is to:
 
-    ```
-    C:\Users\yourusername\Zomboid\Server
-    ```
+1. Open Project Zomboid on your **local Windows PC**
+2. Create and configure a server through the in-game **"Host"** menu
+3. Navigate to the settings folder on Windows:
+   ```
+   C:\Users\<YourUsername>\Zomboid\Server\
+   ```
+4. Copy these three files:
+   - `<servername>.ini`
+   - `<servername>_SandboxVars.lua`
+   - `<servername>_spawnregions.lua`
 
-3. In that folder, copy the following files:
+5. Upload them to your Linux server at:
+   ```
+   /home/steam/Zomboid/Server/
+   ```
 
-    - yourservername.ini
-    - yourservername_spawnregions.lua
-    - yourservername_SandboxVars.lua
+   Using SCP:
+   ```bash
+   scp C:\Users\<YourUsername>\Zomboid\Server\<servername>* steam@<your-vps-ip>:/home/steam/Zomboid/Server/
+   ```
 
-4. In the PZ server directory on your Linux server paste these files:
+   Or use a GUI tool like [FileZilla](https://filezilla-project.org/) (connect via SFTP on port 22).
 
-    ```
-    /home/steam/Zomboid/Server
-    ```
+---
 
-These steps should help you install and configure your Project Zomboid server. Make sure to replace "yourservername" and "yourusername" with the appropriate values for your setup.
+## Running the Server
 
-## :joystick: Running the Server
+### 1. Start a persistent screen session
 
-1. Start a `screen` session:
+`screen` keeps the server running after you disconnect from SSH:
 
-    ```
-    screen -S zomboid
-    ```
+```bash
+screen -S zomboid
+```
 
-2. Navigate to the server files directory and run the server:
+### 2. Start the server
 
-    ```
-    cd /home/steam/pzsteam
-    ```
+```bash
+cd /home/steam/pzsteam
+./start-server.sh -servername <yourservername>
+```
 
-    ```    
-    ./start-server.sh -servername yourservername
-    ```
+Replace `<yourservername>` with the name of your `.ini` config file (without the `.ini` extension).
 
-3. To detach from the screen session (and keep the server running in the background), press `Ctrl + A`, then `D`.
+### 3. Detach from screen (keep server running in background)
 
-4. To attach it again:
+Press `Ctrl + A`, then `D`.
 
-    ```
-    screen -r zomboid
-    ```
+### 4. Re-attach to check the server console
 
-## :godmode: Installing Mods
+```bash
+screen -r zomboid
+```
 
-1. Download the mods you wish to install to your local computer. (https://steamcommunity.com/app/108600/discussions/0/3428846977656275044/)
+### 5. Stop the server gracefully
 
-2. Use `scp` or any other file transfer method to upload the mods to your VPS:
+Re-attach with `screen -r zomboid`, then type:
+```
+quit
+```
 
-    ```
-    scp /path/mods pzserver@your_vps_ip:/home/pzserver/Zomboid/mods/
-    ```
+Wait for the world save to complete before closing the session.
 
-    (Replace `/path/to/mods`, `pzserver`, `your_vps_ip` with the appropriate paths, username, and IP address.)
-   
-   Or use another method to paste the mods folder in the server, as Filezilla.
+---
 
-3. Once uploaded, add the mods to your `ServerSettings.ini` file under the `Mods` section.
+## Installing Mods
 
-## :scroll: License
+### Method 1: Upload mod files via SCP / SFTP
 
-This project is open-source and available under the MIT License. See the [LICENSE](LICENSE) file for more information.
+1. Download mods from the [Steam Workshop](https://steamcommunity.com/app/108600/workshop/) on your local PC
+2. Locate the downloaded mod folder on Windows:
+   ```
+   C:\Users\<YourUsername>\Zomboid\mods\
+   ```
+3. Upload the mod folder to your VPS:
+   ```bash
+   scp -r "C:\Users\<YourUsername>\Zomboid\mods\<ModName>" steam@<your-vps-ip>:/home/steam/Zomboid/mods/
+   ```
+   Or use [FileZilla](https://filezilla-project.org/) via SFTP.
 
-## 🥫❤️ Buy me a dog food can
+4. Add the mod IDs to your server `.ini` file:
+   ```ini
+   Mods=<ModID>;<AnotherModID>
+   WorkshopItems=<WorkshopID>;<AnotherWorkshopID>
+   ```
 
-![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)
+> Mod IDs and Workshop IDs are found on the mod's Steam Workshop page URL and inside the mod's `mod.info` file.
+
+### Method 2: Download Workshop mods via SteamCMD
+
+Inside SteamCMD (logged in as anonymous):
+```
+workshop_download_item 108600 <WorkshopID>
+```
+
+Mods download to `/home/steam/.steam/steamapps/workshop/content/108600/<WorkshopID>/`.  
+Copy or symlink them to `/home/steam/Zomboid/mods/`.
+
+---
+
+## Server Management
+
+### Check if the server is running
+
+```bash
+screen -ls
+```
+
+### Update the server to the latest version
+
+```bash
+steamcmd
+login anonymous
+app_update 380870 validate
+exit
+```
+
+Then restart the server.
+
+### View server logs
+
+```bash
+ls -lt /home/steam/Zomboid/Logs/     # find the latest log file
+cat /home/steam/Zomboid/Logs/<latest>.txt | tail -100
+```
+
+### Backup your server world
+
+```bash
+cp -r /home/steam/Zomboid/Saves/ /home/steam/Zomboid/Saves_backup_$(date +%Y%m%d)/
+```
+
+---
+
+## Troubleshooting
+
+### ❌ "Connection failed" / Cannot connect to the server
+
+- Check ports are open: `sudo ufw status` — look for `16261` and `16262`
+- Confirm the server is running: `screen -ls`
+- Check your **VPS provider's cloud firewall / security group** — many providers have a separate firewall that also needs UDP 16261–16262 opened
+- Verify your server IP: `curl ifconfig.me`
+
+### ❌ Server crashes on startup
+
+- Check available RAM: `free -h` — reduce `-Xmx` in `ProjectZomboid64.json` if needed
+- Read the latest log: `ls -lt /home/steam/Zomboid/Logs/` then `cat` the most recent file
+- Validate server files: re-run `app_update 380870 validate` in SteamCMD
+
+### ❌ "Failed to set thread priority" warning
+
+This is a harmless warning on most Linux VPS environments. The server runs normally.
+
+### ❌ Mods not loading
+
+- Confirm both `Mods=` and `WorkshopItems=` are set correctly in the `.ini` file
+- Verify the mod folder exists at `/home/steam/Zomboid/mods/<ModID>/`
+- Restart the server after any mod changes
+
+### ❌ SteamCMD error: `0x202` or `0x212`
+
+Steam network timeout. Wait a few minutes and retry. If persistent:
+```bash
+rm -rf /home/steam/.steam/steamcmd/appcache
+steamcmd +login anonymous +app_update 380870 +quit
+```
+
+### ❌ `su - steam` asks for a password you don't know
+
+Reset it:
+```bash
+sudo passwd steam
+```
+
+### ❌ Port 16261 is open in UFW but players still can't connect
+
+Your VPS provider likely has a separate cloud-level firewall (Hostinger hPanel, DigitalOcean Firewall, AWS Security Groups). Log into your provider dashboard and add UDP rules for ports 16261 and 16262 there too.
+
+---
+
+## FAQ
+
+**Q: Does running the server require owning Project Zomboid on Steam?**  
+A: No. The dedicated server (App ID 380870) is free and downloads anonymously via SteamCMD. Only the players connecting need to own the game.
+
+**Q: How many players can the server support?**  
+A: Officially up to 32 players. With 8 GB RAM and a modern CPU, 8–16 simultaneous players is very comfortable.
+
+**Q: Which Ubuntu version should I use?**  
+A: **Ubuntu 22.04 LTS** or **24.04 LTS**. Avoid non-LTS releases for production servers.
+
+**Q: Can I run this on a Raspberry Pi or ARM machine?**  
+A: No. The Project Zomboid dedicated server is x86-64 only — ARM is not supported.
+
+**Q: My server IP keeps changing. How do I get a static IP?**  
+A: All major VPS providers give you a static public IP by default. If hosting at home, use a DDNS (Dynamic DNS) service.
+
+**Q: How do I set a server admin password?**  
+A: The server prompts you on first startup. To reset it later, edit `<servername>.ini` and update the `AdminPassword=` field.
+
+**Q: Can I run the server without `screen`, using systemd instead?**  
+A: Yes — you can create a systemd service to auto-start the server on boot. Open an issue if you'd like a ready-made template added to this repo.
+
+**Q: What VPS provider is recommended?**  
+A: **Hetzner** (Europe/US) and **Vultr** offer great price/performance. **Hostinger** is budget-friendly. **DigitalOcean** has excellent documentation. Choose the datacenter closest to your players for lowest ping.
+
+**Q: The server starts but nobody can join — what should I check first?**  
+A: In order: (1) Cloud firewall in your VPS provider dashboard, (2) UFW rules with `sudo ufw status`, (3) correct IP address, (4) server console for errors via `screen -r zomboid`.
+
+---
+
+## Acknowledgements
+
+- [Project Zomboid Wiki — Dedicated Server](https://pzwiki.net/wiki/Dedicated_Server) — official documentation
+- [Valve SteamCMD Documentation](https://developer.valvesoftware.com/wiki/SteamCMD) — SteamCMD reference
+- [r/projectzomboid](https://www.reddit.com/r/projectzomboid/) — community tips and feedback
+- Everyone who opened issues and contributed improvements to this repository ❤️
+
+---
+
+## 💖 Support this project
+
+If this guide saved you time, consider giving the repo a ⭐ — it helps others find it!
+
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate?hosted_button_id=23PAVC8AMJGYW)
 [![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate?hosted_button_id=23PAVC8AMJGYW)
 
-## :mailbox_with_mail: Contact
+---
 
-If you have any questions, suggestions, or issues, please open an issue in the repository.
+## Contact & Contributing
+
+Found a bug in the guide or have a tip to add?  
+👉 **[Open an issue](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/issues/new)** — all feedback is welcome.
+
+Pull requests are also welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+---
+
+## License
+
+This project is open-source under the [MIT License](LICENSE).
