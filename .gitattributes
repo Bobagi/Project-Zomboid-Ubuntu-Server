@@ -1,0 +1,5 @@
+# Tell GitHub that Lua files here are server config/data, not the main project language
+*.lua linguist-documentation=true
+
+# The real content is documentation
+*.md linguist-documentation=false
