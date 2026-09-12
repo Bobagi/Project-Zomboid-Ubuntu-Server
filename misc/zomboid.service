@@ -1,0 +1,38 @@
+[Unit]
+Description=Project Zomboid Dedicated Server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=steam
+Group=steam
+WorkingDirectory=/home/steam/pzsteam
+Environment=HOME=/home/steam
+
+# -DmS creates the "zomboid" session WITHOUT forking, so systemd tracks the
+# real process. The console stays reachable exactly as the guide describes:
+# "screen -r zomboid" as the steam user.
+ExecStart=/usr/bin/screen -DmS zomboid /home/steam/pzsteam/start-server.sh -servername <yourservername>
+
+# Types "quit" into the console, the same command the guide tells you to type by
+# hand, and then WAITS for the server to finish saving. The wait is the
+# important half: without it systemd assumes the stop is done the instant the
+# text is injected and signals the server in the middle of the save.
+# "|| exit 0" covers the case where the server already died and there is no
+# session left to talk to.
+ExecStop=/bin/bash -c 'screen -S zomboid -p 0 -X stuff "quit\n" || exit 0; while kill -0 $MAINPID 2>/dev/null; do sleep 2; done'
+
+# start-server.sh ends with "exit 0" even when the game is killed, so systemd
+# always sees a successful exit and Restart=on-failure would never fire.
+# Restart=always is the only setting that actually restarts after a crash.
+# A manual "systemctl stop" is not a failure, so it does not restart.
+Restart=always
+RestartSec=15
+
+# Upper bound for the whole stop, including the save. An empty world saves in
+# about 10 seconds; a large world with players takes longer.
+TimeoutStopSec=300
+
+[Install]
+WantedBy=multi-user.target
