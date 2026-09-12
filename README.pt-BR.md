@@ -20,12 +20,13 @@
 3. [Instalação](#instalação)
 4. [Configuração](#configuração)
 5. [Rodando o Servidor](#rodando-o-servidor)
-6. [Instalando Mods](#instalando-mods)
-7. [Gerenciamento do Servidor](#gerenciamento-do-servidor)
-8. [Solução de Problemas](#solução-de-problemas)
-9. [Perguntas Frequentes (FAQ)](#perguntas-frequentes-faq)
-10. [Créditos](#créditos)
-11. [Licença](#licença)
+6. [Iniciar Automaticamente no Boot (systemd)](#iniciar-automaticamente-no-boot-systemd)
+7. [Instalando Mods](#instalando-mods)
+8. [Gerenciamento do Servidor](#gerenciamento-do-servidor)
+9. [Solução de Problemas](#solução-de-problemas)
+10. [Perguntas Frequentes (FAQ)](#perguntas-frequentes-faq)
+11. [Créditos](#créditos)
+12. [Licença](#licença)
 
 ---
 
@@ -39,6 +40,7 @@ A maioria dos tutoriais para hospedar um servidor de Project Zomboid no Linux pu
 - ✅ Ajuste de RAM via `ProjectZomboid64.json`
 - ✅ Importar configurações do servidor criado localmente no Windows
 - ✅ Rodar o servidor em background com `screen`
+- ✅ Subir o servidor sozinho no boot com um serviço `systemd` testado
 - ✅ Instalar mods via SCP ou SFTP (FileZilla)
 - ✅ Erros comuns e como corrigir
 
@@ -235,6 +237,128 @@ Aguarde o save do mundo completar antes de fechar.
 
 ---
 
+## Iniciar Automaticamente no Boot (systemd)
+
+O método com `screen` acima exige que você entre por SSH e suba o servidor na mão. Se a
+máquina reiniciar (queda de energia, atualização de kernel, `sudo reboot`), o servidor fica
+no chão até alguém subir de novo.
+
+Um serviço do `systemd` resolve isso: o servidor sobe no boot, reinicia se cair, e o
+`systemctl stop` desliga **usando o mesmo comando `quit`** documentado acima, então o mundo
+é sempre salvo. O console interativo continua funcionando igual, com `screen -r zomboid`.
+
+### 1. Criar o arquivo do serviço
+
+```bash
+sudo nano /etc/systemd/system/zomboid.service
+```
+
+Cole o conteúdo abaixo, trocando `<nomedoseuservidor>` pelo nome do seu arquivo `.ini`
+(sem a extensão):
+
+```ini
+[Unit]
+Description=Project Zomboid Dedicated Server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=steam
+Group=steam
+WorkingDirectory=/home/steam/pzsteam
+Environment=HOME=/home/steam
+
+ExecStart=/usr/bin/screen -DmS zomboid /home/steam/pzsteam/start-server.sh -servername <nomedoseuservidor>
+ExecStop=/bin/bash -c 'screen -S zomboid -p 0 -X stuff "quit\n" || exit 0; while kill -0 $MAINPID 2>/dev/null; do sleep 2; done'
+
+Restart=always
+RestartSec=15
+TimeoutStopSec=300
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Uma cópia deste arquivo está em [`misc/zomboid.service`](misc/zomboid.service).
+
+Por que ele é escrito assim (cada item abaixo foi verificado em servidor real, não suposto):
+
+- **`screen -DmS`** cria a sessão *sem fazer fork*, então o systemd acompanha o processo de
+  verdade. O `screen -dmS` comum faz fork e o systemd perde o rastro.
+- **O `ExecStop` digita `quit` no console**, exatamente o que o guia manda fazer na mão. Sem
+  isso, o systemd mandaria sinal direto para a JVM.
+- **E depois o `ExecStop` espera o servidor sair.** Essa segunda metade importa tanto quanto
+  a primeira. Um `ExecStop` de uma linha só, que apenas injeta o `quit`, retorna na hora, o
+  systemd conclui que a parada terminou e sinaliza o servidor *no meio do save*.
+- **`Restart=always`, e não `on-failure`.** O `start-server.sh` termina com `exit 0` mesmo
+  quando o jogo é morto, então o systemd sempre vê uma saída bem-sucedida e o `on-failure`
+  nunca dispararia. Um `systemctl stop` manual não é considerado falha, então não reinicia
+  o servidor.
+- **`TimeoutStopSec=300`** limita a parada inteira, incluindo o save. Um mundo vazio salva em
+  uns 10 segundos; um mundo grande com jogadores demora mais.
+
+### 2. Garanta que não há outra cópia rodando
+
+Não rode uma cópia no `screen` e outra no systemd no mesmo mundo. Se você subiu o servidor
+na mão, volte para ele e digite `quit` antes:
+
+```bash
+screen -r zomboid
+```
+
+### 3. Habilitar e iniciar
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable zomboid
+sudo systemctl start zomboid
+```
+
+### 4. Conferir se funcionou
+
+```bash
+sudo systemctl status zomboid          # deve mostrar "active (running)"
+sudo -u steam screen -r zomboid        # o console, igual a antes
+```
+
+O servidor leva um ou dois minutos carregando antes de aceitar jogadores. Espere aparecer
+`*** SERVER STARTED ***` no console.
+
+### Comandos do dia a dia
+
+| Tarefa | Comando |
+|---|---|
+| Iniciar | `sudo systemctl start zomboid` |
+| Parar (salva o mundo) | `sudo systemctl stop zomboid` |
+| Reiniciar | `sudo systemctl restart zomboid` |
+| Ver estado | `sudo systemctl status zomboid` |
+| Abrir o console | `sudo -u steam screen -r zomboid` |
+| Sair do console sem derrubar | `Ctrl + A`, depois `D` |
+| Desligar o início automático | `sudo systemctl disable zomboid` |
+
+> ⚠️ **Pare o servidor com `systemctl stop`, e não digitando `quit` no console.**
+> Com `Restart=always`, o systemd entende um `quit` manual como saída inesperada e sobe o
+> servidor de novo 15 segundos depois.
+
+> **Onde ficam os logs?** O `journalctl -u zomboid` mostra só as mensagens do próprio
+> systemd, porque o console do jogo vive dentro do `screen`. A saída real do servidor está
+> em `/home/steam/Zomboid/server-console.txt` e em `/home/steam/Zomboid/Logs/`.
+
+### Testando por conta própria
+
+O repositório traz um teste automatizado que sobe o serviço, confere as portas, para o
+serviço, verifica que o mundo foi salvo sem kill forçado, sobe de novo, confirma que o save
+foi recarregado, e mata o processo para testar a recuperação de crash:
+
+```bash
+sudo ./misc/test-zomboid-service.sh
+```
+
+Rode **sem jogadores conectados**, porque ele sobe e desce o servidor várias vezes.
+
+---
+
 ## Instalando Mods
 
 ### Método 1: Upload dos arquivos de mod via SCP / SFTP
@@ -356,6 +480,9 @@ R: **Ubuntu 22.04 LTS** ou **24.04 LTS**. Evite versões não-LTS para servidore
 
 **P: Posso rodar em Raspberry Pi ou ARM?**  
 R: Não. O servidor dedicado do Project Zomboid é apenas para arquitetura x86-64.
+
+**P: Dá para rodar sem o `screen`, usando systemd?**  
+R: Sim. Veja [Iniciar Automaticamente no Boot (systemd)](#iniciar-automaticamente-no-boot-systemd) para um arquivo de serviço pronto. Ele roda o servidor *dentro* do `screen`, então o console continua acessível e o `systemctl stop` ainda salva o mundo com o comando `quit` documentado.
 
 **P: Como definir a senha de administrador do servidor?**  
 R: O servidor pede para você definir na primeira inicialização. Para redefinir depois, edite o arquivo `<nomeservidor>.ini` e atualize o campo `AdminPassword=`.
