@@ -341,6 +341,11 @@ O servidor leva um ou dois minutos carregando antes de aceitar jogadores. Espere
 > Com `Restart=always`, o systemd entende um `quit` manual como saída inesperada e sobe o
 > servidor de novo 15 segundos depois.
 
+> **Parar com jogadores online é seguro.** O encerramento roda o `Saving players` antes de
+> desconectar qualquer um, então os personagens conectados são gravados no `players.db`
+> primeiro e só depois os jogadores caem. Mesmo assim, avise-os: do lado deles o servidor
+> simplesmente some.
+
 > **Onde ficam os logs?** O `journalctl -u zomboid` mostra só as mensagens do próprio
 > systemd, porque o console do jogo vive dentro do `screen`. A saída real do servidor está
 > em `/home/steam/Zomboid/server-console.txt` e em `/home/steam/Zomboid/Logs/`.

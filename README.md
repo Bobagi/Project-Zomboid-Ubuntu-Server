@@ -343,6 +343,10 @@ The server takes a minute or two to load before players can join. Watch for
 > With `Restart=always`, systemd sees a manual `quit` as an unexpected exit and starts the
 > server again 15 seconds later.
 
+> **Stopping with players online is safe.** The shutdown runs `Saving players` before anyone
+> is disconnected, so connected characters are written to `players.db` first and the players
+> are dropped afterwards. Still, warn them: from their side the server simply goes away.
+
 > **Where are the logs?** `journalctl -u zomboid` only shows systemd's own messages,
 > because the game console lives inside `screen`. The real server output is in
 > `/home/steam/Zomboid/server-console.txt` and `/home/steam/Zomboid/Logs/`.
