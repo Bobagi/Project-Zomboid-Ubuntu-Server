@@ -16,7 +16,7 @@ If a command doesn't work on a newer Ubuntu version, or if something is unclear:
 
 1. Fork the repository
 2. Create a branch: `git checkout -b fix/describe-your-change`
-3. Make your changes — keep the tone practical and copy-paste friendly
+3. Make your changes, keep the tone practical and copy-paste friendly
 4. Open a pull request with a clear description of what was changed and why
 
 ### Good contributions to make
@@ -31,9 +31,9 @@ If a command doesn't work on a newer Ubuntu version, or if something is unclear:
 
 - Write commands as exact copy-paste snippets inside fenced code blocks
 - Explain the *why* when it's not obvious (e.g., why 32-bit support is needed)
-- Keep the FAQ honest — don't add questions nobody asks
+- Keep the FAQ honest, don't add questions nobody asks
 - If adding a new section, add it to the Table of Contents too
 
 ## Questions?
 
-Open an issue — that's the fastest way to reach me.
+Open an issue, that's the fastest way to reach me.

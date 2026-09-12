@@ -1,4 +1,4 @@
-# Project Zomboid Dedicated Server on Ubuntu — Complete Setup Guide
+# Project Zomboid Dedicated Server on Ubuntu · Complete Setup Guide
 
 > **Step-by-step guide to install, configure, and run a Project Zomboid dedicated server on Ubuntu 22.04 / 24.04 LTS using SteamCMD.** Covers firewall setup, RAM configuration, mod installation, server recovery, and common troubleshooting. Works on any VPS provider (Hostinger, DigitalOcean, Hetzner, Vultr, AWS, Linode, etc.).
 
@@ -51,11 +51,11 @@ Most tutorials for hosting a Project Zomboid server on Linux skip important deta
 
 Before you begin, make sure you have:
 
-- A VPS or dedicated machine running **Ubuntu 22.04 or 24.04 LTS (64-bit)** — other Debian-based distros likely work too
+- A VPS or dedicated machine running **Ubuntu 22.04 or 24.04 LTS (64-bit)**. Other Debian-based distros likely work too
 - At least **4 GB RAM** (8 GB recommended for a stable experience with mods)
 - `sudo` privileges on the server
 - Basic knowledge of terminal / Linux commands
-- **Project Zomboid** purchased on Steam (required for mod access — the server itself is free)
+- **Project Zomboid** purchased on Steam (required for mod access; the server itself is free)
 - An SSH client (e.g., PuTTY on Windows, built-in terminal on macOS/Linux)
 
 ---
@@ -76,7 +76,7 @@ sudo ufw enable
 > ⚠️ **Important:** If you are connected via SSH, allow your SSH port **before** enabling the firewall, otherwise you will lose access:
 
 ```bash
-sudo ufw allow 22        # SSH (default port — change if you use a custom port)
+sudo ufw allow 22        # SSH (default port, change if you use a custom port)
 ```
 
 Allow the Project Zomboid server ports:
@@ -434,14 +434,14 @@ cp -r /home/steam/Zomboid/Saves/ /home/steam/Zomboid/Saves_backup_$(date +%Y%m%d
 
 ### ❌ "Connection failed" / Cannot connect to the server
 
-- Check ports are open: `sudo ufw status` — look for `16261` and `16262`
+- Check ports are open: `sudo ufw status`, look for `16261` and `16262`
 - Confirm the server is running: `screen -ls`
-- Check your **VPS provider's cloud firewall / security group** — many providers have a separate firewall that also needs UDP 16261–16262 opened
+- Check your **VPS provider's cloud firewall / security group**: many providers have a separate firewall that also needs UDP 16261 a 16262 opened
 - Verify your server IP: `curl ifconfig.me`
 
 ### ❌ Server crashes on startup
 
-- Check available RAM: `free -h` — reduce `-Xmx` in `ProjectZomboid64.json` if needed
+- Check available RAM: `free -h`, reduce `-Xmx` in `ProjectZomboid64.json` if needed
 - Read the latest log: `ls -lt /home/steam/Zomboid/Logs/` then `cat` the most recent file
 - Validate server files: re-run `app_update 380870 validate` in SteamCMD
 
@@ -482,13 +482,13 @@ Your VPS provider likely has a separate cloud-level firewall (Hostinger hPanel, 
 A: No. The dedicated server (App ID 380870) is free and downloads anonymously via SteamCMD. Only the players connecting need to own the game.
 
 **Q: How many players can the server support?**  
-A: Officially up to 32 players. With 8 GB RAM and a modern CPU, 8–16 simultaneous players is very comfortable.
+A: Officially up to 32 players. With 8 GB RAM and a modern CPU, 8 a 16 simultaneous players is very comfortable.
 
 **Q: Which Ubuntu version should I use?**  
 A: **Ubuntu 22.04 LTS** or **24.04 LTS**. Avoid non-LTS releases for production servers.
 
 **Q: Can I run this on a Raspberry Pi or ARM machine?**  
-A: No. The Project Zomboid dedicated server is x86-64 only — ARM is not supported.
+A: No. The Project Zomboid dedicated server is x86-64 only, ARM is not supported.
 
 **Q: My server IP keeps changing. How do I get a static IP?**  
 A: All major VPS providers give you a static public IP by default. If hosting at home, use a DDNS (Dynamic DNS) service.
@@ -502,23 +502,23 @@ A: Yes. See [Auto-start on Boot (systemd)](#auto-start-on-boot-systemd) for a re
 **Q: What VPS provider is recommended?**  
 A: **Hetzner** (Europe/US) and **Vultr** offer great price/performance. **Hostinger** is budget-friendly. **DigitalOcean** has excellent documentation. Choose the datacenter closest to your players for lowest ping.
 
-**Q: The server starts but nobody can join — what should I check first?**  
+**Q: The server starts but nobody can join, what should I check first?**  
 A: In order: (1) Cloud firewall in your VPS provider dashboard, (2) UFW rules with `sudo ufw status`, (3) correct IP address, (4) server console for errors via `screen -r zomboid`.
 
 ---
 
 ## Acknowledgements
 
-- [Project Zomboid Wiki — Dedicated Server](https://pzwiki.net/wiki/Dedicated_Server) — official documentation
-- [Valve SteamCMD Documentation](https://developer.valvesoftware.com/wiki/SteamCMD) — SteamCMD reference
-- [r/projectzomboid](https://www.reddit.com/r/projectzomboid/) — community tips and feedback
+- [Project Zomboid Wiki · Dedicated Server](https://pzwiki.net/wiki/Dedicated_Server) · official documentation
+- [Valve SteamCMD Documentation](https://developer.valvesoftware.com/wiki/SteamCMD) · SteamCMD reference
+- [r/projectzomboid](https://www.reddit.com/r/projectzomboid/) · community tips and feedback
 - Everyone who opened issues and contributed improvements to this repository ❤️
 
 ---
 
 ## 💖 Support this project
 
-If this guide saved you time, consider giving the repo a ⭐ — it helps others find it!
+If this guide saved you time, consider giving the repo a ⭐, it helps others find it!
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate?hosted_button_id=23PAVC8AMJGYW)
 [![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate?hosted_button_id=23PAVC8AMJGYW)
@@ -528,7 +528,7 @@ If this guide saved you time, consider giving the repo a ⭐ — it helps others
 ## Contact & Contributing
 
 Found a bug in the guide or have a tip to add?  
-👉 **[Open an issue](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/issues/new)** — all feedback is welcome.
+👉 **[Open an issue](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/issues/new)**, all feedback is welcome.
 
 Pull requests are also welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 

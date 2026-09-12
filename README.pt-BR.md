@@ -1,4 +1,4 @@
-# Servidor Dedicado de Project Zomboid no Ubuntu — Guia Completo
+# Servidor Dedicado de Project Zomboid no Ubuntu · Guia Completo
 
 > **Guia passo a passo para instalar, configurar e rodar um servidor dedicado de Project Zomboid no Ubuntu 22.04 / 24.04 LTS com SteamCMD.** Cobre configuração de firewall, RAM, instalação de mods, recuperação e os erros mais comuns. Funciona em qualquer provedor de VPS (Hostinger, DigitalOcean, Hetzner, Vultr, AWS, Linode, etc.).
 
@@ -54,7 +54,7 @@ Antes de começar, certifique-se de ter:
 - Pelo menos **4 GB de RAM** (8 GB recomendado para uso com mods)
 - Privilégios `sudo` no servidor
 - Conhecimento básico de terminal / comandos Linux
-- **Project Zomboid** comprado na Steam (necessário para acessar mods — o servidor em si é gratuito)
+- **Project Zomboid** comprado na Steam (necessário para acessar mods; o servidor em si é gratuito)
 - Um cliente SSH (ex: PuTTY no Windows, terminal nativo no macOS/Linux)
 
 ---
@@ -75,7 +75,7 @@ sudo ufw enable
 > ⚠️ **Importante:** Se você está conectado via SSH, libere a porta SSH **antes** de ativar o firewall, senão você perderá o acesso:
 
 ```bash
-sudo ufw allow 22        # SSH (porta padrão — altere se você usa outra porta)
+sudo ufw allow 22        # SSH (porta padrão, altere se você usa outra porta)
 ```
 
 Liberar as portas do servidor de Project Zomboid:
@@ -432,14 +432,14 @@ cp -r /home/steam/Zomboid/Saves/ /home/steam/Zomboid/Saves_backup_$(date +%Y%m%d
 
 ### ❌ "Falha na conexão" / Não consigo conectar ao servidor
 
-- Verifique se as portas estão abertas: `sudo ufw status` — procure por `16261` e `16262`
+- Verifique se as portas estão abertas: `sudo ufw status`, procure por `16261` e `16262`
 - Confirme que o servidor está rodando: `screen -ls`
-- Verifique o **firewall do painel do seu provedor de VPS** — muitos provedores têm um firewall separado do UFW que também precisa liberar UDP 16261–16262
+- Verifique o **firewall do painel do seu provedor de VPS**: muitos provedores têm um firewall separado do UFW que também precisa liberar UDP 16261 a 16262
 - Confirme o IP do servidor: `curl ifconfig.me`
 
 ### ❌ O servidor cai na inicialização
 
-- Verifique a RAM disponível: `free -h` — reduza o `-Xmx` em `ProjectZomboid64.json` se necessário
+- Verifique a RAM disponível: `free -h`, reduza o `-Xmx` em `ProjectZomboid64.json` se necessário
 - Leia o log mais recente: `ls -lt /home/steam/Zomboid/Logs/` e faça `cat` no arquivo mais novo
 - Valide os arquivos do servidor: rode `app_update 380870 validate` no SteamCMD
 
@@ -473,7 +473,7 @@ Seu provedor de VPS provavelmente tem um firewall próprio no painel (Hostinger 
 R: Não. O servidor dedicado (App ID 380870) é gratuito e pode ser baixado anonimamente via SteamCMD. Apenas os jogadores que vão se conectar precisam ter o jogo.
 
 **P: Quantos jogadores o servidor suporta?**  
-R: Oficialmente até 32 jogadores. Com 8 GB de RAM e uma CPU moderna, 8–16 jogadores simultâneos funciona muito bem.
+R: Oficialmente até 32 jogadores. Com 8 GB de RAM e uma CPU moderna, 8 a 16 jogadores simultâneos funciona muito bem.
 
 **P: Qual versão do Ubuntu usar?**  
 R: **Ubuntu 22.04 LTS** ou **24.04 LTS**. Evite versões não-LTS para servidores em produção.
@@ -490,23 +490,23 @@ R: O servidor pede para você definir na primeira inicialização. Para redefini
 **P: Qual provedor de VPS é recomendado?**  
 R: **Hetzner** (Europa/EUA) e **Vultr** oferecem ótimo custo-benefício. **Hostinger** é mais econômico. **DigitalOcean** tem excelente documentação. Escolha o datacenter mais próximo dos seus jogadores para menor ping.
 
-**P: O servidor inicia mas ninguém consegue entrar — o que verificar primeiro?**  
+**P: O servidor inicia mas ninguém consegue entrar, o que verificar primeiro?**  
 R: Em ordem: (1) Firewall no painel do seu provedor de VPS, (2) regras UFW com `sudo ufw status`, (3) IP correto do servidor, (4) console do servidor para erros via `screen -r zomboid`.
 
 ---
 
 ## Créditos
 
-- [Project Zomboid Wiki — Dedicated Server](https://pzwiki.net/wiki/Dedicated_Server) — documentação oficial
-- [Valve SteamCMD Documentation](https://developer.valvesoftware.com/wiki/SteamCMD) — referência do SteamCMD
-- [r/projectzomboid](https://www.reddit.com/r/projectzomboid/) — dicas da comunidade
+- [Project Zomboid Wiki · Dedicated Server](https://pzwiki.net/wiki/Dedicated_Server) · documentação oficial
+- [Valve SteamCMD Documentation](https://developer.valvesoftware.com/wiki/SteamCMD) · referência do SteamCMD
+- [r/projectzomboid](https://www.reddit.com/r/projectzomboid/) · dicas da comunidade
 - Todos que abriram issues e contribuíram com melhorias neste repositório ❤️
 
 ---
 
 ## 💖 Apoie este projeto
 
-Se este guia te ajudou, considere dar uma ⭐ no repositório — isso ajuda outras pessoas a encontrá-lo!
+Se este guia te ajudou, considere dar uma ⭐ no repositório, isso ajuda outras pessoas a encontrá-lo!
 
 [![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate?hosted_button_id=23PAVC8AMJGYW)
 [![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate?hosted_button_id=23PAVC8AMJGYW)
@@ -516,7 +516,7 @@ Se este guia te ajudou, considere dar uma ⭐ no repositório — isso ajuda out
 ## Contato e Contribuições
 
 Encontrou um erro no guia ou tem uma dica para adicionar?  
-👉 **[Abra uma issue](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/issues/new)** — todo feedback é bem-vindo.
+👉 **[Abra uma issue](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/issues/new)**, todo feedback é bem-vindo.
 
 Pull requests também são bem-vindos!
 
