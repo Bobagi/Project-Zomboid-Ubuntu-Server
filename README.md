@@ -1,6 +1,6 @@
 # Project Zomboid Dedicated Server on Ubuntu · Complete Setup Guide
 
-> **Step-by-step guide to install, configure, and run a Project Zomboid dedicated server on Ubuntu 22.04 / 24.04 LTS using SteamCMD.** Covers firewall setup, RAM configuration, mod installation, server recovery, and common troubleshooting. Works on any VPS provider (Hostinger, DigitalOcean, Hetzner, Vultr, AWS, Linode, etc.).
+> **Step-by-step guide to install, configure, and run a Project Zomboid dedicated server on Ubuntu 22.04 / 24.04 / 26.04 LTS using SteamCMD.** Covers firewall setup, RAM configuration, mod installation, server recovery, and common troubleshooting. Works on any VPS provider (Hostinger, DigitalOcean, Hetzner, Vultr, AWS, Linode, etc.).
 
 [![Stars](https://img.shields.io/github/stars/Bobagi/Project-Zomboid-Ubuntu-Server?style=for-the-badge)](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/stargazers)
 [![Forks](https://img.shields.io/github/forks/Bobagi/Project-Zomboid-Ubuntu-Server?style=for-the-badge)](https://github.com/Bobagi/Project-Zomboid-Ubuntu-Server/network/members)
@@ -51,7 +51,7 @@ Most tutorials for hosting a Project Zomboid server on Linux skip important deta
 
 Before you begin, make sure you have:
 
-- A VPS or dedicated machine running **Ubuntu 22.04 or 24.04 LTS (64-bit)**. Other Debian-based distros likely work too
+- A VPS or dedicated machine running **Ubuntu 22.04, 24.04, or 26.04 LTS (64-bit)**. Other Debian-based distros likely work too
 - At least **4 GB RAM** (8 GB recommended for a stable experience with mods)
 - `sudo` privileges on the server
 - Basic knowledge of terminal / Linux commands
@@ -272,7 +272,7 @@ WorkingDirectory=/home/steam/pzsteam
 Environment=HOME=/home/steam
 
 ExecStart=/usr/bin/screen -DmS zomboid /home/steam/pzsteam/start-server.sh -servername <yourservername>
-ExecStop=/bin/bash -c 'screen -S zomboid -p 0 -X stuff "quit\n" || exit 0; while kill -0 $MAINPID 2>/dev/null; do sleep 2; done'
+ExecStop=/bin/bash -c 'screen -S zomboid -p 0 -X stuff "quit\r" || exit 0; while kill -0 $MAINPID 2>/dev/null; do sleep 2; done'
 
 Restart=always
 RestartSec=15
@@ -289,7 +289,9 @@ Why it is written this way (each line below was verified on a real server, not a
 - **`screen -DmS`** starts the session *without forking*, so systemd tracks the real
   process. Plain `screen -dmS` forks away and systemd loses track of it.
 - **`ExecStop` types `quit` into the console**, which is exactly what the guide tells you
-  to do by hand. Without it, systemd would signal the JVM directly.
+  to do by hand. Without it, systemd would signal the JVM directly. It submits the line with
+  `\r` (a real carriage return, the byte the Enter key actually sends), not `\n`: `\n` worked
+  on 24.04 but left the command sitting unsubmitted on 26.04.
 - **`ExecStop` then waits for the server to exit.** This half matters just as much. A
   one-line `ExecStop` that only injects `quit` returns instantly, systemd concludes the
   stop is finished and signals the server *in the middle of the save*.
@@ -489,7 +491,7 @@ A: No. The dedicated server (App ID 380870) is free and downloads anonymously vi
 A: Officially up to 32 players. With 8 GB RAM and a modern CPU, 8 a 16 simultaneous players is very comfortable.
 
 **Q: Which Ubuntu version should I use?**  
-A: **Ubuntu 22.04 LTS** or **24.04 LTS**. Avoid non-LTS releases for production servers.
+A: **Ubuntu 22.04, 24.04, or 26.04 LTS**. Avoid non-LTS releases for production servers.
 
 **Q: Can I run this on a Raspberry Pi or ARM machine?**  
 A: No. The Project Zomboid dedicated server is x86-64 only, ARM is not supported.

@@ -93,12 +93,14 @@ else
   ok 'systemd-analyze verify is clean'
 fi
 
-# ExecStop must carry a REAL newline, otherwise the console never receives the
-# "quit" command and the server is eventually killed instead of saving.
-if systemctl show "$SERVICE" -p ExecStop | grep -qz 'stuff quit'$'\n'; then
-  ok 'ExecStop sends "quit" followed by a real newline'
+# ExecStop must carry a REAL carriage return (the byte the Enter key actually
+# sends), otherwise the console never receives the "quit" command and the
+# server is eventually killed instead of saving. A plain "\n" is what "stuff"
+# expects on 24.04, but on 26.04 it leaves the command sitting unsubmitted.
+if systemctl show "$SERVICE" -p ExecStop | grep -qz 'stuff quit'$'\r'; then
+  ok 'ExecStop sends "quit" followed by a real carriage return'
 else
-  no 'ExecStop newline escape did not survive unit parsing'
+  no 'ExecStop carriage-return escape did not survive unit parsing'
 fi
 
 step '2. Service starts and the server becomes ready'
