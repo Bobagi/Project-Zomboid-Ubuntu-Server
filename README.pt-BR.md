@@ -413,6 +413,7 @@ screen -ls
 
 ```bash
 steamcmd
+force_install_dir /home/steam/pzsteam
 login anonymous
 app_update 380870 validate
 exit
@@ -465,7 +466,7 @@ cp -r /home/steam/Zomboid/Saves/ /home/steam/Zomboid/Saves_backup_$(date +%Y%m%d
 Timeout de rede da Steam. Aguarde alguns minutos e tente novamente. Se persistir:
 ```bash
 rm -rf /home/steam/.steam/steamcmd/appcache
-steamcmd +login anonymous +app_update 380870 +quit
+steamcmd +force_install_dir /home/steam/pzsteam +login anonymous +app_update 380870 validate +quit
 ```
 
 ### ❌ A porta 16261 está aberta no UFW mas jogadores ainda não conseguem conectar
