@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 **Which step failed?**
-<!-- e.g. "Step 7 – Install SteamCMD", "Running the server", "Installing mods" -->
+<!-- e.g. "Step 7 · Install SteamCMD", "Running the server", "Installing mods" -->
 
 **Ubuntu version**
 <!-- e.g. Ubuntu 22.04, 24.04 -->

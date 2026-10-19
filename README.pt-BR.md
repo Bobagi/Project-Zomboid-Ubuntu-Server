@@ -469,6 +469,13 @@ rm -rf /home/steam/.steam/steamcmd/appcache
 steamcmd +force_install_dir /home/steam/pzsteam +login anonymous +app_update 380870 validate +quit
 ```
 
+### ❌ O `su - steam` pede uma senha que você não sabe
+
+Redefina a senha:
+```bash
+sudo passwd steam
+```
+
 ### ❌ A porta 16261 está aberta no UFW mas jogadores ainda não conseguem conectar
 
 Seu provedor de VPS provavelmente tem um firewall próprio no painel (Hostinger hPanel, DigitalOcean Firewall, AWS Security Groups). Acesse o painel do seu provedor e adicione as regras UDP para as portas 16261 e 16262 lá também.
