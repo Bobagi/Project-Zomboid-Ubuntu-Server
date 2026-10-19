@@ -414,6 +414,7 @@ screen -ls
 
 ```bash
 steamcmd
+force_install_dir /home/steam/pzsteam
 login anonymous
 app_update 380870 validate
 exit
@@ -466,7 +467,7 @@ This is a harmless warning on most Linux VPS environments. The server runs norma
 Steam network timeout. Wait a few minutes and retry. If persistent:
 ```bash
 rm -rf /home/steam/.steam/steamcmd/appcache
-steamcmd +login anonymous +app_update 380870 +quit
+steamcmd +force_install_dir /home/steam/pzsteam +login anonymous +app_update 380870 validate +quit
 ```
 
 ### ❌ `su - steam` asks for a password you don't know
